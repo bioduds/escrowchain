@@ -11,16 +11,17 @@ my BlocksizeLimit $BLOCKSIZE := 4096;
 
 shell "date";
 print "my constant blocksize value is $BLOCKSIZE\n";
-print "Initializing Proceedures...\nWelcome to EscrowChain\n";
+print "Initializing Proceedures...\n";
+print "Welcome to EscrowChain\n";
 
-Core::Config.start;
-my $genesis = Core::Genesis.new;
+Core::Config::Basic.start;
+my $genesis = Core::Genesis::Block.new;
 $genesis.say-hello-from-genesis;
+my $gen-message = $genesis.create-genesis ?? "Genesis was created previously" !! "Genesis Block Created Successfully";
+print "Genesis Creation: $gen-message\n";
 
-print "Testing Module Merkle...\n";
-
-my @dataset = <one two three four>;
-my $merkle = BW::Merkle::Tree.new( :dataset(@dataset) );
-print "Merkle Root: $merkle.get-root()";
+my @ds = <one two three four>;
+my $merkle = BW::Merkle::Tree.new( :dataset(@ds) );
+say "Merkle Root: " ~ $merkle.get-root ~ "\n";
 
 print "\n+++ end +++\n";
