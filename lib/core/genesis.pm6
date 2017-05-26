@@ -1,12 +1,13 @@
 unit class Core::Genesis;
+use Digest::SHA;
 
-subset Version of Str where *>0;
+subset Version of Str where * > 0;
 
-class Core::Genesis {
+class Block {
   has Version $.version = "1.0";
-  has $.prev-block = 0;
+  has UInt $.prev-block = 0;
   has $.merkle-root = 0x3becdcce98e8;
-  has $.timestamp = 78787878678;
+  has $.timestamp = now;
   has $.bits = 786788989;
   has $.nonce = 877567682019838;
   has $.number-of-transactions = 1;
@@ -21,7 +22,18 @@ class Core::Genesis {
   has $.pk-script;
   has $.locktime;
 
-  method say-hello-from-genesis { print "Hello, from Genesis. My version is $.version\n"; }
+  method say-hello-from-genesis {
+    print "Hello, from Genesis. My version is $.version\n";
+  }
+
+  method create-genesis {
+    if "blocks/bl000000.dat".IO.e { return True; }
+    else {
+      my $data = "test data";
+      'blocks/bl000000.dat'.IO.spurt: sha256 $data.encode: 'ascii';
+      return False;
+    }
+  }
 }
 
 #`{ BLOCK COMMENTS
