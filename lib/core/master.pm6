@@ -1,8 +1,8 @@
-unit class Core::Config;
 
-class Basic {
+
+class EC::Core::Config {
   has $.id = 0;
-  method start {
-    print "Started...\n";
+  method apply {
+    print "Started Config...\n";
   }
 }

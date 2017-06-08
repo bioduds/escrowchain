@@ -1,12 +1,12 @@
-unit class Core::Genesis;
 use Digest::SHA;
 
 subset Version of Str where * > 0;
+subset Hex of UInt where * < 2**1024;
 
-class Block {
+class EC::Core::Genesis {
   has Version $.version = "1.0";
   has UInt $.prev-block = 0;
-  has $.merkle-root = 0x3becdcce98e8;
+  has Hex $.merkle-root = 0x44633b02bb638a76c8616dcaf18285b024e690fd33b73572d4fa18938d67137b;
   has $.timestamp = now;
   has $.bits = 786788989;
   has $.nonce = 877567682019838;
@@ -24,6 +24,7 @@ class Block {
 
   method say-hello-from-genesis {
     print "Hello, from Genesis. My version is $.version\n";
+    say $.merkle-root.base(16);
   }
 
   method create-genesis {
@@ -34,6 +35,11 @@ class Block {
       return False;
     }
   }
+
+  method encode-block {
+    return
+  }
+
 }
 
 #`{ BLOCK COMMENTS

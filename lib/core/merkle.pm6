@@ -1,37 +1,38 @@
-unit class BW::Merkle;
 use Digest::SHA;
 
-class Tree {
+class EC::Merkle::Tree {
 
   has @.dataset;
-  has @!line;
+  has @!nodes;
 
-  method !set-leaves {
+  method !set-nodes {
     if ( @.dataset.elems % 2 == 1 ) {
       @.dataset.push( @.dataset.pop );
     }
-    @!line = [];
+    @!nodes = [];
     for @.dataset -> $data {
       my $sha256 = sha256 $data.encode: 'ascii';
-      @!line.push( $sha256.list».fmt: "%02x" );
+      sub buf_to_hex { [~] $^buf.list».fmt: "%02x" }
+      @!nodes.push( buf_to_hex $sha256 );
     }
   }
 
   method get-root {
-    self!set-leaves;
+    self!set-nodes;
     for reverse 1..^self.height -> $h {
       my @current_line = [];
-      for @!line -> $a, $b {
+      for @!nodes -> $a, $b {
         my $sha256 = sha256 ($a~$b).encode: 'ascii';
-        @current_line.push( $sha256.list».fmt: "%02x" );
+        sub buf_to_hex { [~] $^buf.list».fmt: "%02x" }
+        @current_line.push( buf_to_hex $sha256 );
       }
-      @!line = @current_line;
+      @!nodes = @current_line;
     }
-    return @!line[0];
+    return @!nodes[0];
   }
 
   method height {
-    return log( @!dataset.elems, 2 ) + 1;
+    return log( @.dataset.elems, 2 ) + 1;
   }
 
 }
