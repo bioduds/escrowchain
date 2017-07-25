@@ -1,6 +1,5 @@
 use v6;
-use lib 'lib/core';
-use master;
+use config;
 use genesis;
 use merkle;
 
